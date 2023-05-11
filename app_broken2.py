@@ -52,7 +52,7 @@ def main():
 		leki_slider = st.slider("Leki", value=1, min_value=0, max_value=10)
 
 	# read the data
-	df = pd.read_csv('DSP_13.CSV')
+	df = pd.read_csv('DSP_13.CSV', delimiter=';')
 	# remove the missing values
 	df.dropna(inplace=True)
 	# take the median of each column
