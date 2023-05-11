@@ -1,35 +1,44 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import pickle
 
-# Read the CSV file
-data = pd.read_csv("DSP_13.csv")
+def fill_empty_rows_with_medians(data):
+    for column in data.columns:
+        column_median = data[column].fillna(data[column].median())
+        data[column] = column_median
+    return data
 
-# Compute the median for each column
-column_medians = data.median()
+def train_model(data):
+    # Extract the features and target variable
+    features = data[['objawy', 'wiek', 'choroby_wsp', 'wzrost', 'leki']]
+    target = data['zdrowie']
 
-# Fill empty rows in each column with the corresponding median value
-data_filled = data.fillna(column_medians)
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
 
-# Extract the features and target variable
-features = data_filled[['objawy', 'wiek', 'choroby_wsp', 'wzrost', 'leki']]
-target = data_filled['zdrowie']
+    # Train the model
+    model = RandomForestClassifier()
+    model.fit(X_train, y_train)
 
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
-
-# Train the model
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-
-# Save the trained model
-filename = "model.sav"
-pickle.dump(model, open(filename, 'wb'))
+    return model
 
 def main():
+
+	# Read the CSV file
+	data = pd.read_csv("DSC_13.csv")
+
+	# Fill empty rows with column medians
+	data_filled = fill_empty_rows_with_medians(data)
+
+	# Save the filled data back to the CSV file
+	data_filled.to_csv("DSC_13_filled.csv", index=False)
+
+	# Train the model
+	model = train_model(data_filled)
 
 	st.set_page_config(page_title="Titanic App")
 	overview = st.container()
