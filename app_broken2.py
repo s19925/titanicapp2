@@ -6,33 +6,29 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 
-startTime = datetime.now()
-
 # import znanych nam bibliotek
 
-data = pd.read_csv("DSP_13.csv", delimiter=';')
-# Extract the features and target variable
-features = data[['objawy', 'wiek', 'choroby_wsp', 'wzrost', 'leki']]
-target = data['zdrowie']
-
-# Split the data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
-
-
-# Create an imputer object with strategy='median'
-imputer = SimpleImputer(strategy='median')
-
-# Fit the imputer on the training data and transform it
-X_train = imputer.fit_transform(X_train)
-
-# Transform the testing data using the fitted imputer
-X_test = imputer.transform(X_test)
-
-# Train the model
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-
 def main():
+	data = pd.read_csv("DSP_13.csv", delimiter=';')
+	# Extract the features and target variable
+	features = data[['objawy', 'wiek', 'choroby_wsp', 'wzrost', 'leki']]
+	target = data['zdrowie']
+
+	# Split the data into training and testing sets
+	X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+	# Create an imputer object with strategy='median'
+	imputer = SimpleImputer(strategy='median')
+
+	# Fit the imputer on the training data and transform it
+	X_train = imputer.fit_transform(X_train)
+
+	# Transform the testing data using the fitted imputer
+	X_test = imputer.transform(X_test)
+
+	# Train the model
+	model = RandomForestClassifier()
+	model.fit(X_train, y_train)
 
 	st.set_page_config(page_title="Titanic App")
 	overview = st.container()
@@ -51,12 +47,7 @@ def main():
 		wzrost_slider = st.slider("Wzrost", value=1, min_value=120, max_value=220)
 		leki_slider = st.slider("Leki", value=1, min_value=0, max_value=10)
 
-	# read the data
-	df = pd.read_csv('DSP_13.CSV', delimiter=';')
-	# remove the missing values
-	df.dropna(inplace=True)
-	# take the median of each column
-	medians = df.median()
+	medians = data.median()
 	# replace the missing values with the medians
 	objawy_slider = medians['objawy'] if objawy_slider is None else objawy_slider
 	wiek_slider = medians['wiek'] if wiek_slider is None else wiek_slider
