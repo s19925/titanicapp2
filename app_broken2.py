@@ -29,13 +29,10 @@ def train_model(data):
 def main():
 
 	# Read the CSV file
-	data = pd.read_csv("DSC_13.csv")
+	data = pd.read_csv("DSP_13.csv")
 
 	# Fill empty rows with column medians
 	data_filled = fill_empty_rows_with_medians(data)
-
-	# Save the filled data back to the CSV file
-	data_filled.to_csv("DSC_13_filled.csv", index=False)
 
 	# Train the model
 	model = train_model(data_filled)
