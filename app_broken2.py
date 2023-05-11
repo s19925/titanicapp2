@@ -29,39 +29,40 @@ def train_model(data):
 
 def main():
 
-	# Read the CSV file
-	data = pd.read_csv("DSP_13.csv")
+    # Read the CSV file
+    data = pd.read_csv("DSP_13.csv")
 
-	# Fill empty rows with column medians
-	data_filled = fill_empty_rows_with_medians(data)
+    # Fill empty rows with column medians
+    data_filled = fill_empty_rows_with_medians(data)
 
-	# Train the model
-	model = train_model(data_filled)
+    # Train the model
+    model = train_model(data_filled)
 
-	st.set_page_config(page_title="Titanic App")
-	overview = st.container()
-	left, right = st.columns(2)
-	prediction = st.container()
+    st.set_page_config(page_title="Titanic App")
+    overview = st.container()
+    left, right = st.columns(2)
+    prediction = st.container()
 
-	st.image("https://upload.wikimedia.org/wikipedia/commons/f/fd/RMS_Titanic_3.jpg")
+    st.image("https://upload.wikimedia.org/wikipedia/commons/f/fd/RMS_Titanic_3.jpg")
 
-	with overview:
-		st.title("Titanic App")
+    with overview:
+        st.title("Titanic App")
 
-	with right:
-		age_slider = st.slider("Wiek", value=1, min_value=1, max_value=90)
-		sibsp_slider = st.slider("Liczba rodzeństwa i/lub partnera", min_value=0, max_value=10)
-		parch_slider = st.slider("Liczba rodziców i/lub dzieci", min_value=0, max_value=10)
-		fare_slider = st.slider("Cena biletu", min_value=0, max_value=480, step=1)
+    with right:
+        age_slider = st.slider("wiek", value=1, min_value=1, max_value=90)
+        sibsp_slider = st.slider("choroby wsp", min_value=0, max_value=10)
+        parch_slider = st.slider("wzrost", min_value=1, max_value=300)
+        fare_slider = st.slider("objawy", min_value=1, max_value=5)
 
-	data = [[age_slider, sibsp_slider, parch_slider, fare_slider]]
-	survival = model.predict(data)
-	s_confidence = model.predict_proba(data)
 
-	with prediction:
-		st.subheader("Czy taka osoba przeżyłaby katastrofę?")
-		st.subheader(("Tak" if survival[0] == 1 else "Nie"))
-		st.write("Pewność predykcji {0:.2f} %".format(s_confidence[0][survival][0] * 100))
+    data = [[age_slider,sibsp_slider, parch_slider, fare_slider]]
+    survival = model.predict(data)
+    s_confidence = model.predict_proba(data)
+
+    with prediction:
+        st.subheader("Czy taka osoba przeżyłaby katastrofę?")
+        st.subheader(("Tak" if survival[0] == 1 else "Nie"))
+        st.write("Pewność predykcji {0:.2f} %".format(s_confidence[0][survival][0] * 100))
 
 if __name__ == "__main__":
     main()
