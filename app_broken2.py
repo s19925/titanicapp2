@@ -8,8 +8,9 @@ import pickle
 
 def fill_empty_rows_with_medians(data):
     for column in data.columns:
-        column_median = data[column].fillna(data[column].median())
-        data[column] = column_median
+        if data[column].dtype in [np.int64, np.float64]:  # Check if column is numeric
+            column_median = data[column].fillna(data[column].median())
+            data[column] = column_median
     return data
 
 def train_model(data):
