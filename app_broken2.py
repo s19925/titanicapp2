@@ -1,5 +1,3 @@
-# źródło danych [https://www.kaggle.com/c/titanic/](https://www.kaggle.com/c/titanic)
-
 import streamlit as st
 import pickle
 from datetime import datetime
@@ -10,12 +8,6 @@ from sklearn.model_selection import train_test_split
 startTime = datetime.now()
 
 # import znanych nam bibliotek
-
-import pathlib
-from pathlib import Path
-
-temp = pathlib.PosixPath
-pathlib.PosixPath = pathlib.WindowsPath
 
 data = pd.read_csv("DSP_13.csv")
 # Extract the features and target variable
