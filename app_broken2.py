@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 import pickle
 
 # Read the CSV file
-data = pd.read_csv("DSC_13.csv")
+data = pd.read_csv("DSP_13.csv")
 
 # Compute the median for each column
 column_medians = data.median()
