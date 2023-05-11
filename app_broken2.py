@@ -1,40 +1,33 @@
 import streamlit as st
-import pickle
-from datetime import datetime
-startTime = datetime.now()
-import os
+import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
-import pandas as pd
-import pd.fillna
+import pickle
 
-#uczenie modelu
+# Read the CSV file
+data = pd.read_csv("DSC_13.csv")
 
-data = pd.read_csv("DSP_13.csv", sep=";")
-y = data.iloc[:,-1]
-data.drop(['objawy','wiek','choroby_wsp', 'wzrost', 'leki', 'zdrowie'], axis = 1, inplace = True)
-data(['objawy','wiek','choroby_wsp', 'wzrost', 'leki', 'zdrowie']).fillna(0)
-x = data.iloc[:,0:5]
-X_train, X_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
-model = RandomForestClassifier(n_estimators = 10, max_depth = 4, random_state=0)
+# Compute the median for each column
+column_medians = data.median()
+
+# Fill empty rows in each column with the corresponding median value
+data_filled = data.fillna(column_medians)
+
+# Extract the features and target variable
+features = data_filled[['objawy', 'wiek', 'choroby_wsp', 'wzrost', 'leki']]
+target = data_filled['zdrowie']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+# Train the model
+model = RandomForestClassifier()
 model.fit(X_train, y_train)
-y_pred = model.predict(X_test)
-y_pred
-# import znanych nam bibliotek
 
-import pathlib
-from pathlib import Path
-
-temp = pathlib.PosixPath
-pathlib.PosixPath = pathlib.WindowsPath
-
-# otwieramy wcześniej wytrenowany model
-
-sex_d ={0:"Mężczyzna",1:"Kobieta"}
-pclass_d = {0:"Pierwsza",1:"Druga", 2:"Trzecia"}
-embarked_d = {0:"Cherbourg", 1:"Queenstown", 2:"Southampton"}
-# o ile wcześniej kodowaliśmy nasze zmienne, to teraz wprowadzamy etykiety z ich nazewnictwem
+# Save the trained model
+filename = "model.sav"
+pickle.dump(model, open(filename, 'wb'))
 
 def main():
 
